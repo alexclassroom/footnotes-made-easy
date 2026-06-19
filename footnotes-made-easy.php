@@ -1267,6 +1267,9 @@ class swas_wp_footnotes {
 
 	function tooltip_scripts() {
 
+		$tt_js_path  = plugin_dir_path( __FILE__ ) . 'assets/js/tooltips.min.js';
+		$tt_css_path = plugin_dir_path( __FILE__ ) . 'assets/css/tooltips.min.css';
+
 		wp_enqueue_script(
 							'wp-footnotes-tooltips',
 							plugins_url( 'assets/js/tooltips.min.js' , __FILE__ ),
@@ -1277,11 +1280,11 @@ class swas_wp_footnotes {
 									'jquery-ui-core',
 									'jquery-ui-position'
 								),
-							'3.0.8',
+							file_exists( $tt_js_path ) ? (string) filemtime( $tt_js_path ) : '3.0.8',
 							true
 							);
 
-		wp_enqueue_style( 'wp-footnotes-tt-style', plugins_url( 'assets/css/tooltips.min.css' , __FILE__ ), array(), '3.0.8' );
+		wp_enqueue_style( 'wp-footnotes-tt-style', plugins_url( 'assets/css/tooltips.min.css' , __FILE__ ), array(), file_exists( $tt_css_path ) ? (string) filemtime( $tt_css_path ) : '3.0.8' );
 	}
 
 	/**
