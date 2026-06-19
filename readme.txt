@@ -157,8 +157,10 @@ Full documentation is at [docs.altvisewp.com/footnotes-made-easy](https://docs.a
 6. Export/import footnote settings
 
 == Changelog ==
-
+= 3.2.1 [June 12, 2026] =
 I use semantic versioning, with the first release being 1.0.
+
+* Fixed: Duplicate footnote text appearing at the page bottom when Pretty Tooltips was enabled.
 
 = 3.2.0 [June 12, 2026] =
 * New: Fully redesigned admin UI with a dedicated top-level Footnotes menu (Dashboard, Footnotes Settings, Tools, and so much more)
