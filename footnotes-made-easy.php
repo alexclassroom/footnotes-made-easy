@@ -3,7 +3,7 @@
  * Plugin Name:       Footnotes Made Easy
  * Plugin URI:        https://lumumbas.blog/plugins/footnotes-made-easy/
  * Description:       Allows post authors to easily add and manage footnotes in posts.
- * Version:           3.2.1-beta.1
+ * Version:           3.2.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Patrick Lumumba
@@ -375,7 +375,7 @@ class swas_wp_footnotes {
         add_action( 'the_content', array( $this, 'process' ), $this->current_options[ 'priority' ] );
         add_action( 'admin_menu',         array( $this, 'add_options_page' ) );      // Insert the Admin panel.
         add_action( 'network_admin_menu',  array( $this, 'add_network_menu' ) );         // Network admin menu.
-        add_action( 'wp_head', array( $this, 'insert_styles' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'insert_styles' ) );
         if ( $this->current_options[ 'pretty_tooltips' ] ) add_action( 'wp_enqueue_scripts', array( $this, 'tooltip_scripts' ) );
 
         add_filter( 'plugin_action_links', array( $this, 'add_settings_link' ), 10, 2 );
@@ -1164,7 +1164,13 @@ class swas_wp_footnotes {
 		if ( 'symbol' !== $this->current_options[ 'list_style_type' ] ) {
 			$css .= 'ol.footnotes>li {list-style-type:' . esc_attr( $this->current_options[ 'list_style_type' ] ) . ';}';
 		}
-		wp_add_inline_style( 'wp-block-library', $css );
+		// Attach the inline CSS to a self-owned, always-enqueued handle rather than
+		// 'wp-block-library'. Many themes (and performance plugins) do not load
+		// wp-block-library on the front end, in which case wp_add_inline_style() on
+		// that handle silently outputs nothing and the footnote sizing is lost.
+		wp_register_style( 'fme-footnotes-inline', false ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+		wp_enqueue_style( 'fme-footnotes-inline' );
+		wp_add_inline_style( 'fme-footnotes-inline', $css );
 	}
 
 	/**
